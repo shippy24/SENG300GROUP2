@@ -134,8 +134,8 @@ public class Iteration1 {
 		for(typeobj X: types.types) {
 			X.print();
 		}
-		int si = types.types.size();
-		System.out.println("Well we made it this far" + si );
+		int siz = types.types.size();
+		System.out.println(siz);
 	}
 	
 	
