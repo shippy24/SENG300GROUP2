@@ -13,8 +13,8 @@ public class typeObjQueue {
 			if(X.name.equals(qns)) {		//check if any element's name equals qualifiedName
 				X.updateDeclarationCount();	//if yes up date that element's referenceCount
 				flag = false;				//set flag to false
+				break;
 			}
-			break;
 		}
 		if(flag) {							//if element not present
 			typeobj Y = new typeobj(qns);	//create element
@@ -29,8 +29,8 @@ public class typeObjQueue {
 			if(X.name.equals(qns)) {		//check if any element's name equals qualifiedName
 				X.updateReferenceCount();	//if yes up date that element's referenceCount
 				flag = false;				//set flag to false
+				break;
 			}
-			break;
 		}
 		if(flag) {							//if element not present
 			typeobj Y = new typeobj(qns);	//create element

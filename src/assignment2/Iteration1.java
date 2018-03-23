@@ -110,6 +110,18 @@ public class Iteration1 {
 				//}
 				return true;
 			}
+			
+			public boolean visit(AnnotationTypeDeclaration node) {
+				String qualifiedName = node.getName().getFullyQualifiedName();
+				types.upDateListDec(qualifiedName);
+				return true;
+			}
+			
+			public boolean visit(EnumDeclaration node) {
+				String qualifiedName = node.getName().getFullyQualifiedName();
+				types.upDateListDec(qualifiedName);
+				return true; 
+			}
 			// Count References
 			public boolean 	visit(FieldDeclaration node) {
 				String qualifiedName = node.getType().toString();
