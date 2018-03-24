@@ -2,12 +2,18 @@ package assignment2;
 
 
 import java.io.File;
+import java.io.FileOutputStream;
 //import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
 
 import assignment2.typeObjQueue;
 
@@ -17,7 +23,7 @@ public class Iteration1 {
 	public static File rootDir;
 	public typeObjQueue types = new typeObjQueue();
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		int argsLength = args.length;
 		
 		// Throw error if invalid amount of arguments and terminate
@@ -66,9 +72,10 @@ public class Iteration1 {
 	 * returns array
 	 * Modified code from https://stackoverflow.com/questions/10780747/recursively-search-for-a-directory-in-java
 	 * @author Shayne Mujuru
+	 * @throws IOException 
 	 */ 
 	
-	public static List<File> parseFilesInDir(File rootDir) {
+	public static List<File> parseFilesInDir(File rootDir) throws IOException {
 		//make array of files in the directory specified 
 	    File[] files = rootDir.listFiles();
 		
@@ -77,8 +84,10 @@ public class Iteration1 {
 	    List<File> filesList = new ArrayList<File>();
 		
 	    for (File file : files) {
-	        if ((file.isFile() && ((file.getName().endsWith(".java")) || (file.getName().endsWith(".jar"))))) {
+	        if ((file.isFile() && ((file.getName().endsWith(".java"))))) {
 	            filesList.add(file);
+	        } else if ((file.isFile() && ((file.getName().endsWith(".jar"))))) {
+	        	unzipJar(rootDir.toString(), file.toString());
 	        } else if (file.isDirectory()) {
 	            directories.add(file);
 	        }
@@ -167,5 +176,51 @@ public class Iteration1 {
 	}
 	
 	
+	/**
+	 * Code modified from https://www.programcreek.com/2012/08/unzip-a-jar-file-in-java-program/
+	 * used to unzip jar files to be able to be parsed
+	 * @param destinationDir
+	 * @param jarPath
+	 * @throws IOException
+	 */
+	public static void unzipJar(String destinationDir, String jarPath) throws IOException {
+		File file = new File(jarPath);
+		JarFile jar = new JarFile(file);
+ 
+		// fist get all directories,
+		// then make those directory on the destination Path
+		for (Enumeration<JarEntry> enums = jar.entries(); enums.hasMoreElements();) {
+			JarEntry entry = (JarEntry) enums.nextElement();
+ 
+			String fileName = destinationDir + File.separator + entry.getName();
+			File f = new File(fileName);
+ 
+			if (fileName.endsWith("/")) {
+				f.mkdirs();
+			}
+ 
+		}
+ 
+		//now create all files
+		for (Enumeration<JarEntry> enums = jar.entries(); enums.hasMoreElements();) {
+			JarEntry entry = (JarEntry) enums.nextElement();
+ 
+			String fileName = destinationDir + File.separator + entry.getName();
+			File f = new File(fileName);
+ 
+			if (!fileName.endsWith("/")) {
+				InputStream is = jar.getInputStream(entry);
+				FileOutputStream fos = new FileOutputStream(f);
+ 
+				// write contents of 'is' to 'fos'
+				while (is.available() > 0) {
+					fos.write(is.read());
+				}
+ 
+				fos.close();
+				is.close();
+			}
+		}
+	}
 }
 
