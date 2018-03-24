@@ -2,7 +2,7 @@ package assignment2;
 
 
 import java.io.File;
-import java.io.FilenameFilter;
+//import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -153,11 +153,11 @@ public class Iteration1 {
 	/**
 	 * print:
 	 * Prints the output string
-	 */
+	 
 	public void print() {
 		System.out.println(type + "; Declarations found: " + count_dec + "; References found: " + count_ref + ".");
 	}
-	
+	**/
 	public void print2() {
 		for(typeobj X: types.types) {
 			X.print();
