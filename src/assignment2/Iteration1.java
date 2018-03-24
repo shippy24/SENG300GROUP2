@@ -6,43 +6,43 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
 import assignment2.typeObjQueue;
 
 import org.eclipse.jdt.core.dom.*;
 
 public class Iteration1 {
-	public File[] javaFiles;
-	private String type;
-	public String typeSimple;
-	public int count_dec;
-	public int count_ref;
+	public static File rootDir;
 	public typeObjQueue types = new typeObjQueue();
 
 	public static void main(String[] args) {
 		int argsLength = args.length;
 		
 		// Throw error if invalid amount of arguments and terminate
-		if (argsLength < 2) {
+		if (argsLength < 1) {
 			System.out.println("Error: Not enough arguments passed.\nExpected: <directory-pathname> <qualified-name-java-type>");
 			return;
-		} else if (argsLength > 2) {
+		} else if (argsLength > 1) {
 			System.out.println("Error: Too many arguments passed.\nExpected: <directory-pathname> <qualified-name-java-type>");
 			return;
 		}
 		
 		// if correct amount of arguments then create new instance and start work
-		Iteration1 it1 = new Iteration1(args[0], args[1]);
+		Iteration1 it1 = new Iteration1(args[0]);
 		
-		for (File javaFile : it1.javaFiles) {
+		List<File> javaFiles = parseFilesInDir(rootDir);
+		
+		for(File file: javaFiles) {
 			String sourceCode;
-			
 			// Try to read the contents of file, if error occurs, skip and go to next file.
 			try {
-				sourceCode = new String(Files.readAllBytes(Paths.get(javaFile.toURI())));
+				sourceCode = new String(Files.readAllBytes(Paths.get(file.toURI())));
 			} catch (IOException e) {
 				continue;
 			}
-			
+				
 			// if contents successfully read then parse the contents
 			it1.parse(sourceCode);
 		}
@@ -51,42 +51,46 @@ public class Iteration1 {
 		it1.print2();
 		
 		return;
-	}
+	}	
 	
 	/**
 	 * Iteration1 constructor
 	 * Takes given pathName and typeName and initializes global variables
 	 */
-	public Iteration1(String pathName, String typeName) {
-		javaFiles = fileFinder(pathName);
-		type = typeName;
-		count_dec = 0;
-		count_ref = 0;
-		
-		String[] types = type.split("\\.");
-		if (types.length >= 1) {
-			typeSimple = types[types.length-1];
-		} else {
-			typeSimple = type;
-		}
+	public Iteration1(String pathName) {
+		rootDir = new File(pathName);
 	}
 	
 	/**
-	 * Code for this method taken and modified from StackOverflow:
-	 * https://stackoverflow.com/questions/1384947/java-find-txt-files-in-specified-folder
-	 * 
-	 * This method will return an array of .java files given a directory pathname
-	 */
-	private static File[] fileFinder(String dirName){
-        File dir = new File(dirName);
-
-        return dir.listFiles(new FilenameFilter() { 
-        	public boolean accept(File dir, String filename) {
-        		return filename.endsWith(".java");
-        	}
-        });
-    }
+	 * Recursively searches a directory and builds an array of .java and .jar files
+	 * returns array
+	 * Modified code from https://stackoverflow.com/questions/10780747/recursively-search-for-a-directory-in-java
+	 * @author Shayne Mujuru
+	 */ 
 	
+	public static List<File> parseFilesInDir(File rootDir) {
+		//make array of files in the directory specified 
+	    File[] files = rootDir.listFiles();
+		
+		//make a list of the files which are folders
+	    List<File> directories = new ArrayList<File>(files.length);
+	    List<File> filesList = new ArrayList<File>();
+		
+	    for (File file : files) {
+	        if ((file.isFile() && ((file.getName().endsWith(".java")) || (file.getName().endsWith(".jar"))))) {
+	            filesList.add(file);
+	        } else if (file.isDirectory()) {
+	            directories.add(file);
+	        }
+	    }
+		
+		//for each folder in directories parse files in each directory
+	    for (File directory : directories) {
+	        parseFilesInDir(directory);
+	    }
+	    
+	    return filesList;
+	}
 	
 	/**
 	 * Parses given source code and increments count_dec and count_ref if necessary.
@@ -97,10 +101,22 @@ public class Iteration1 {
 
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setSource(sourceCode.toCharArray());
+		parser.setBindingsRecovery(true);
 
 		CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 
 		cu.accept(new ASTVisitor() {
+			/**
+			public boolean visit(SimpleName node) {
+				String qualifiedName = node.getFullyQualifiedName();
+				if(node.isDeclaration()){
+					String ty = node.getNodeType();
+					types.upDateListDec(qualifiedName);
+				}
+				
+				return true;
+			}
+			**/
 			// Count Declarations
 			public boolean visit(TypeDeclaration node) {
 				String qualifiedName = node.getName().getFullyQualifiedName();
