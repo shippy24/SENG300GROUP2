@@ -95,34 +95,8 @@ public class Iteration2 {
 	        if ((file.isFile() && ((file.getName().endsWith(".java"))))) {
 	            filesList.add(file);
 	        } else if ((file.isFile() && ((file.getName().endsWith(".jar"))))) {
-	        	//Add the file returned from the unzip fuction to the end of the filesInDir list
-	        	//??Depends on unzip returning a file/folder??
+	        	//Add the file returned from the unzip fuction to the end of the directories list
 	        	String newDirectoryName = file.getPath() + "unzipped";
-	        	//String newDirectoryNameStiched = new String();
-	        	//for (String str: newDirectoryNameSplit) {
-	        		//newDirectoryNameStiched = newDirectoryNameStiched + str;
-	        	//}
-	        	//String destinationDir = file.getParent() + "/" + newDirectoryNameStiched;
-	        	/**
-	        	java.util.jar.JarFile jar = new java.util.jar.JarFile(jarFile);
-	        	java.util.Enumeration enumEntries = jar.entries();
-	        	while (enumEntries.hasMoreElements()) {
-	        	    java.util.jar.JarEntry file = (java.util.jar.JarEntry) enumEntries.nextElement();
-	        	    java.io.File f = new java.io.File(destDir + java.io.File.separator + file.getName());
-	        	    if (file.isDirectory()) { // if its a directory, create it
-	        	        f.mkdir();
-	        	        continue;
-	        	    }
-	        	    java.io.InputStream is = jar.getInputStream(file); // get the input stream
-	        	    java.io.FileOutputStream fos = new java.io.FileOutputStream(f);
-	        	    while (is.available() > 0) {  // write contents of 'is' to 'fos'
-	        	        fos.write(is.read());
-	        	    }
-	        	    fos.close();
-	        	    is.close();
-	        	}
-	        	jar.close();
-	        	**/
 	        	
 	        	
 	        	directories.add(unzipJar(newDirectoryName, file.getPath()));
@@ -156,17 +130,6 @@ public class Iteration2 {
 		CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 
 		cu.accept(new ASTVisitor() {
-			/**
-			public boolean visit(SimpleName node) {
-				String qualifiedName = node.getFullyQualifiedName();
-				if(node.isDeclaration()){
-					String ty = node.getNodeType();
-					types.upDateListDec(qualifiedName);
-				}
-				
-				return true;
-			}
-			**/
 			// Count Declarations
 			public boolean visit(TypeDeclaration node) {
 				String qualifiedName = node.getName().getFullyQualifiedName();
@@ -203,10 +166,6 @@ public class Iteration2 {
 	/**
 	 * print:
 	 * Prints the output string
-	 
-	public void print() {
-		System.out.println(type + "; Declarations found: " + count_dec + "; References found: " + count_ref + ".");
-	}
 	**/
 	public void print2() {
 		for(Typeobj X: types.types) {
