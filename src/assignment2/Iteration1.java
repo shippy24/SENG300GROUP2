@@ -72,7 +72,8 @@ public class Iteration1 {
 	 * returns array
 	 * Modified code from https://stackoverflow.com/questions/10780747/recursively-search-for-a-directory-in-java
 	 * @author Shayne Mujuru
-	 * @throws IOException 
+	 * @throws IOException
+	 * @return list of .java files to be parsed 
 	 */ 
 	
 	public static List<File> parseFilesInDir(File rootDir) throws IOException {
@@ -82,12 +83,49 @@ public class Iteration1 {
 		//make a list of the files which are folders
 	    List<File> directories = new ArrayList<File>(files.length);
 	    List<File> filesList = new ArrayList<File>();
-		
+	    
+	    //Ensure if something is unzipped it is checked
+	    List<File> filesInDir = new ArrayList<File>();
+	    
 	    for (File file : files) {
+	    	filesInDir.add(file);
+	    }
+		
+	    for (File file : filesInDir) {
 	        if ((file.isFile() && ((file.getName().endsWith(".java"))))) {
 	            filesList.add(file);
 	        } else if ((file.isFile() && ((file.getName().endsWith(".jar"))))) {
-	        	unzipJar(rootDir.toString(), file.toString());
+	        	//Add the file returned from the unzip fuction to the end of the filesInDir list
+	        	//??Depends on unzip returning a file/folder??
+	        	String newDirectoryName = file.getPath() + "unzipped";
+	        	//String newDirectoryNameStiched = new String();
+	        	//for (String str: newDirectoryNameSplit) {
+	        		//newDirectoryNameStiched = newDirectoryNameStiched + str;
+	        	//}
+	        	//String destinationDir = file.getParent() + "/" + newDirectoryNameStiched;
+	        	/**
+	        	java.util.jar.JarFile jar = new java.util.jar.JarFile(jarFile);
+	        	java.util.Enumeration enumEntries = jar.entries();
+	        	while (enumEntries.hasMoreElements()) {
+	        	    java.util.jar.JarEntry file = (java.util.jar.JarEntry) enumEntries.nextElement();
+	        	    java.io.File f = new java.io.File(destDir + java.io.File.separator + file.getName());
+	        	    if (file.isDirectory()) { // if its a directory, create it
+	        	        f.mkdir();
+	        	        continue;
+	        	    }
+	        	    java.io.InputStream is = jar.getInputStream(file); // get the input stream
+	        	    java.io.FileOutputStream fos = new java.io.FileOutputStream(f);
+	        	    while (is.available() > 0) {  // write contents of 'is' to 'fos'
+	        	        fos.write(is.read());
+	        	    }
+	        	    fos.close();
+	        	    is.close();
+	        	}
+	        	jar.close();
+	        	**/
+	        	
+	        	
+	        	filesInDir.add(unzipJar(newDirectoryName, file.getPath()));
 	        } else if (file.isDirectory()) {
 	            directories.add(file);
 	        }
@@ -95,7 +133,10 @@ public class Iteration1 {
 		
 		//for each folder in directories parse files in each directory
 	    for (File directory : directories) {
-	        parseFilesInDir(directory);
+	    	//for each file in the directory add it to list to be parsed
+	       for (File innerFile : parseFilesInDir(directory)) {
+	    	   filesList.add(innerFile);
+	       }
 	    }
 	    
 	    return filesList;
@@ -178,12 +219,12 @@ public class Iteration1 {
 	
 	/**
 	 * Code modified from https://www.programcreek.com/2012/08/unzip-a-jar-file-in-java-program/
-	 * used to unzip jar files to be able to be parsed
+	 * Takes in jar file, unzippes jar file, and returns list of unzipped files
 	 * @param destinationDir
 	 * @param jarPath
 	 * @throws IOException
 	 */
-	public static void unzipJar(String destinationDir, String jarPath) throws IOException {
+	public static File unzipJar(String destinationDir, String jarPath) throws IOException {
 		File file = new File(jarPath);
 		JarFile jar = new JarFile(file);
  
@@ -219,8 +260,12 @@ public class Iteration1 {
  
 				fos.close();
 				is.close();
+				
 			}
 		}
+		jar.close();
+		File destinationDirFile = new File(destinationDir);
+		return destinationDirFile;
 	}
 }
 
