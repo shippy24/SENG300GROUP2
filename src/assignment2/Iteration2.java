@@ -15,13 +15,13 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 
-import assignment2.typeObjQueue;
+import assignment2.TypeObjLinkedList;
 
 import org.eclipse.jdt.core.dom.*;
 
-public class Iteration1 {
+public class Iteration2 {
 	public static File rootDir;
-	public typeObjQueue types = new typeObjQueue();
+	public TypeObjLinkedList types = new TypeObjLinkedList();
 
 	public static void main(String[] args) throws IOException {
 		int argsLength = args.length;
@@ -36,7 +36,7 @@ public class Iteration1 {
 		}
 		
 		// if correct amount of arguments then create new instance and start work
-		Iteration1 it1 = new Iteration1(args[0]);
+		Iteration2 it2 = new Iteration2(args[0]);
 		
 		List<File> javaFiles = parseFilesInDir(rootDir);
 		
@@ -50,11 +50,11 @@ public class Iteration1 {
 			}
 				
 			// if contents successfully read then parse the contents
-			it1.parse(sourceCode);
+			it2.parse(sourceCode);
 		}
 		
 		// print result
-		it1.print2();
+		it2.print2();
 		
 		return;
 	}	
@@ -63,7 +63,7 @@ public class Iteration1 {
 	 * Iteration1 constructor
 	 * Takes given pathName and typeName and initializes global variables
 	 */
-	public Iteration1(String pathName) {
+	public Iteration2(String pathName) {
 		rootDir = new File(pathName);
 	}
 	
@@ -209,7 +209,7 @@ public class Iteration1 {
 	}
 	**/
 	public void print2() {
-		for(typeobj X: types.types) {
+		for(Typeobj X: types.types) {
 			X.print();
 		}
 		int siz = types.types.size();
@@ -268,4 +268,3 @@ public class Iteration1 {
 		return destinationDirFile;
 	}
 }
-

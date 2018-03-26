@@ -1,11 +1,11 @@
 package assignment2;
 
-public class typeobj {
+public class Typeobj {
 	public int declarationCount = 0;
 	public int referenceCount = 0;
 	public String name;
 	
-	public typeobj(String startName) {
+	public Typeobj(String startName) {
 		name = startName;
 	}
 	
