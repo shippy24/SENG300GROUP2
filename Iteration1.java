@@ -185,6 +185,25 @@ public class Iteration1 {
 
 				return true;
 			}
+			
+			pubic boolean visit(ImportDeclaration node){
+				String qualifiedName = node.getName().toString();
+				types.upDateListDec(qualifiedName);
+				return true;
+			}
+			
+			public boolean visit(PackageDeclaration node){
+				String qualifiedName = node.getName().toString();
+				types.upDateListDec(qualifiedName);
+				return true;
+			}
+			
+			public boolean visit(MethodDeclaration node){
+				String qualifiedName = node.resolveBinding().getDeclaringClass().getQualifiedName();
+				types.upDateListDec(qualifiedName);
+				return true;
+			}
+			
 		});
 	}
 	
