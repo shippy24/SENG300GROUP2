@@ -125,7 +125,7 @@ public class Iteration2 {
 	        	**/
 	        	
 	        	
-	        	filesInDir.add(unzipJar(newDirectoryName, file.getPath()));
+	        	directories.add(unzipJar(newDirectoryName, file.getPath()));
 	        } else if (file.isDirectory()) {
 	            directories.add(file);
 	        }
@@ -212,8 +212,6 @@ public class Iteration2 {
 		for(Typeobj X: types.types) {
 			X.print();
 		}
-		int siz = types.types.size();
-		System.out.println(siz);
 	}
 	
 	
