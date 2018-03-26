@@ -15,10 +15,10 @@ import org.junit.Test;
 
 
 public class TestIteration2 {
-
-    private static String BASEDIR = "C:\\Users\\amyyu\\eclipse-workspace\\seng3\\src\\seng3\\testfiles";
+	//base directory to test files folder
+	private static String BASEDIR = "C:\\Users\\amyyu\\eclipse-workspace\\seng3\\src\\seng3\\testfiles";
 	
-    @Test
+	@Test
     public void testCreateParserForJLS8() {
     assertNotNull(ASTParser.newParser(AST.JLS8));
     }
@@ -90,9 +90,7 @@ public class TestIteration2 {
     	temp.print2();
     	assertEquals("aTest: Declarations = 1 / ReferenceCount = 0\r\n" + 
     			"bTest: Declarations = 1 / ReferenceCount = 0\r\n" + 
-    			"String: Declarations = 0 / ReferenceCount = 1\r\n" + 
-    			"3\r" + 
-    			"\n", outContent.toString());
+    			"String: Declarations = 0 / ReferenceCount = 1\r\n", outContent.toString());
 
     }
 
@@ -106,8 +104,7 @@ public class TestIteration2 {
     	
     	temp.parse(code);
     	temp.print2();
-    	assertEquals("T3: Declarations = 1 / ReferenceCount = 0\r\n" + 
-    			"1\r\n", outContent.toString());
+    	assertEquals("T3: Declarations = 1 / ReferenceCount = 0\r\n", outContent.toString());
 
     }
     
@@ -122,13 +119,14 @@ public class TestIteration2 {
     	temp.parse(code);
     	temp.print2();
     	assertEquals("T3: Declarations = 1 / ReferenceCount = 0\r\n" + 
-    			"enum: Declarations = 0 / ReferenceCount = 1\r\n" +
-    			"2\r\n", outContent.toString());
+    			"enum: Declarations = 0 / ReferenceCount = 1\r\n", outContent.toString());
 
     }
     
+    // Note: Passes when jar file from test folder is initially zipped and untouched
+    // Will come up with an error if folder contains unzipped version of jar file
     @Test
-    public void testPassingBaseDir() {
+    public void testWithJar() {
     	ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     	System.setOut(new PrintStream(outContent));
 		String[] args = new String[1];
@@ -138,7 +136,15 @@ public class TestIteration2 {
 		}
 		catch (Exception e) {	
 		}
-
+    	assertEquals("test: Declarations = 1 / ReferenceCount = 0\r\n" + 
+    			"String: Declarations = 0 / ReferenceCount = 1\r\n" + 
+    			"A: Declarations = 1 / ReferenceCount = 0\r\n" + 
+    			"B: Declarations = 1 / ReferenceCount = 0\r\n" + 
+    			"C: Declarations = 1 / ReferenceCount = 0\r\n" + 
+    			"D: Declarations = 1 / ReferenceCount = 0\r\n" + 
+    			"E: Declarations = 2 / ReferenceCount = 0\r\n" + 
+    			"H: Declarations = 1 / ReferenceCount = 0\r\n" + 
+    			"int: Declarations = 0 / ReferenceCount = 1\r\n", outContent.toString());
     }
     
     @Test
