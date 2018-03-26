@@ -16,9 +16,9 @@ import org.junit.Test;
 
 public class TestIteration2 {
 
-	private static String BASEDIR = "C:\\Users\\amyyu\\eclipse-workspace\\seng3\\src\\seng3\\testfiles";
+    private static String BASEDIR = "C:\\Users\\amyyu\\eclipse-workspace\\seng3\\src\\seng3\\testfiles";
 	
-	@Test
+    @Test
     public void testCreateParserForJLS8() {
     assertNotNull(ASTParser.newParser(AST.JLS8));
     }
@@ -128,7 +128,7 @@ public class TestIteration2 {
     }
     
     @Test
-    public void test() {
+    public void testPassingBaseDir() {
     	ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     	System.setOut(new PrintStream(outContent));
 		String[] args = new String[1];
