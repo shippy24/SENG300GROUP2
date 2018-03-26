@@ -72,8 +72,7 @@ public class Iteration1 {
 	 * returns array
 	 * Modified code from https://stackoverflow.com/questions/10780747/recursively-search-for-a-directory-in-java
 	 * @author Shayne Mujuru
-	 * @throws IOException
-	 * @return list of .java files to be parsed 
+	 * @throws IOException 
 	 */ 
 	
 	public static List<File> parseFilesInDir(File rootDir) throws IOException {
@@ -83,49 +82,12 @@ public class Iteration1 {
 		//make a list of the files which are folders
 	    List<File> directories = new ArrayList<File>(files.length);
 	    List<File> filesList = new ArrayList<File>();
-	    
-	    //Ensure if something is unzipped it is checked
-	    List<File> filesInDir = new ArrayList<File>();
-	    
-	    for (File file : files) {
-	    	filesInDir.add(file);
-	    }
 		
-	    for (File file : filesInDir) {
+	    for (File file : files) {
 	        if ((file.isFile() && ((file.getName().endsWith(".java"))))) {
 	            filesList.add(file);
 	        } else if ((file.isFile() && ((file.getName().endsWith(".jar"))))) {
-	        	//Add the file returned from the unzip fuction to the end of the filesInDir list
-	        	//??Depends on unzip returning a file/folder??
-	        	String newDirectoryName = file.getPath() + "unzipped";
-	        	//String newDirectoryNameStiched = new String();
-	        	//for (String str: newDirectoryNameSplit) {
-	        		//newDirectoryNameStiched = newDirectoryNameStiched + str;
-	        	//}
-	        	//String destinationDir = file.getParent() + "/" + newDirectoryNameStiched;
-	        	/**
-	        	java.util.jar.JarFile jar = new java.util.jar.JarFile(jarFile);
-	        	java.util.Enumeration enumEntries = jar.entries();
-	        	while (enumEntries.hasMoreElements()) {
-	        	    java.util.jar.JarEntry file = (java.util.jar.JarEntry) enumEntries.nextElement();
-	        	    java.io.File f = new java.io.File(destDir + java.io.File.separator + file.getName());
-	        	    if (file.isDirectory()) { // if its a directory, create it
-	        	        f.mkdir();
-	        	        continue;
-	        	    }
-	        	    java.io.InputStream is = jar.getInputStream(file); // get the input stream
-	        	    java.io.FileOutputStream fos = new java.io.FileOutputStream(f);
-	        	    while (is.available() > 0) {  // write contents of 'is' to 'fos'
-	        	        fos.write(is.read());
-	        	    }
-	        	    fos.close();
-	        	    is.close();
-	        	}
-	        	jar.close();
-	        	**/
-	        	
-	        	
-	        	filesInDir.add(unzipJar(newDirectoryName, file.getPath()));
+	        	unzipJar(rootDir.toString(), file.toString());
 	        } else if (file.isDirectory()) {
 	            directories.add(file);
 	        }
@@ -133,10 +95,7 @@ public class Iteration1 {
 		
 		//for each folder in directories parse files in each directory
 	    for (File directory : directories) {
-	    	//for each file in the directory add it to list to be parsed
-	       for (File innerFile : parseFilesInDir(directory)) {
-	    	   filesList.add(innerFile);
-	       }
+	        parseFilesInDir(directory);
 	    }
 	    
 	    return filesList;
@@ -167,18 +126,46 @@ public class Iteration1 {
 				return true;
 			}
 			**/
-			// Count Declarations
+			public boolean visit(AnnotationTypeDeclaration node) {
+				String qualifiedName = node.getName().getFullyQualifiedName();
+				types.upDateListDec(qualifiedName);
+				return true;
+			}
+			
+			public boolean visit(AnnotationTypeMemberDeclaration node) {
+				String qualifiedName = node.getName().getFullyQualifiedName();
+				types.upDateListDec(qualifiedName);
+				return true;
+			}
+			
+			public boolean visit(AnonymousClassDeclaration node) {
+				String qualifiedName = node.resolveBinding().getName();
+				types.upDateListDec(qualifiedName);
+				return true;
+			}
+			
+			public boolean visit(ArrayAccess node) {
+				String qualifiedName = "java.util.Arrays";
+				types.upDateListRef(qualifiedName);
+				return true;
+			}
+			
+			public boolean visit(ArrayCreation node) {
+				String qualifiedName = "java.util.Arrays";
+				types.upDateListRef(qualifiedName);
+				return true;
+			}
+			
+			public boolean visit(ArrayInitializer node) {
+				String qualifiedName = node.resolveTypeBinding().getName();
+				types.upDateListRef(qualifiedName);
+				return true;
+			}
+			
 			public boolean visit(TypeDeclaration node) {
 				String qualifiedName = node.getName().getFullyQualifiedName();
 				//System.out.println("dec: " + qualifiedName);
 				//if (typeSimple.equals(qualifiedName)) {
-				types.upDateListDec(qualifiedName);
-				//}
-				return true;
-			}
-			
-			public boolean visit(AnnotationTypeDeclaration node) {
-				String qualifiedName = node.getName().getFullyQualifiedName();
 				types.upDateListDec(qualifiedName);
 				return true;
 			}
@@ -188,15 +175,35 @@ public class Iteration1 {
 				types.upDateListDec(qualifiedName);
 				return true; 
 			}
-			// Count References
+			
 			public boolean 	visit(FieldDeclaration node) {
 				String qualifiedName = node.getType().toString();
-				//System.out.println("ref: " + qualifiedName);
-				//if (typeSimple.equals(qualifiedName)) {
+				if (qualifiedName.equals("String")) {
+					qualifiedName = "java.lang.String";
+				}
 				types.upDateListRef(qualifiedName);
-				//}
+
 				return true;
 			}
+			
+			pubic boolean visit(ImportDeclaration node){
+				String qualifiedName = node.getName().toString();
+				types.upDateListDec(qualifiedName);
+				return true;
+			}
+			
+			public boolean visit(PackageDeclaration node){
+				String qualifiedName = node.getName().toString();
+				types.upDateListDec(qualifiedName);
+				return true;
+			}
+			
+			public boolean visit(MethodDeclaration node){
+				String qualifiedName = node.resolveBinding().getDeclaringClass().getQualifiedName();
+				types.upDateListDec(qualifiedName);
+				return true;
+			}
+			
 		});
 	}
 	
@@ -219,12 +226,12 @@ public class Iteration1 {
 	
 	/**
 	 * Code modified from https://www.programcreek.com/2012/08/unzip-a-jar-file-in-java-program/
-	 * Takes in jar file, unzippes jar file, and returns list of unzipped files
+	 * used to unzip jar files to be able to be parsed
 	 * @param destinationDir
 	 * @param jarPath
 	 * @throws IOException
 	 */
-	public static File unzipJar(String destinationDir, String jarPath) throws IOException {
+	public static void unzipJar(String destinationDir, String jarPath) throws IOException {
 		File file = new File(jarPath);
 		JarFile jar = new JarFile(file);
  
@@ -260,12 +267,7 @@ public class Iteration1 {
  
 				fos.close();
 				is.close();
-				
 			}
 		}
-		jar.close();
-		File destinationDirFile = new File(destinationDir);
-		return destinationDirFile;
 	}
 }
-
