@@ -1,0 +1,46 @@
+* 4fb4ec3 : Add files via upload
+* 78d8b45 : Add files via upload
+* 0dd72c4 : Add files via upload
+* 7452ee7 : Add files via upload
+* 63c8eb6 : Added test for jar
+* 489e64f : Test Files
+* 7331109 : comments removes, code cleaned a little
+*   223662f : Merge branch 'master' of https://github.com/shippy24/SENG300GROUP2
+|\  
+| * 70a491f : Create jarTestFiles
+| * b2fb911 : Update TestIteration2.java
+* | 01a89b1 : Version will unzip jar files and iterate over .java files from unzipped .jar
+|/  
+*   aa9501e : Merge branch 'master' of https://github.com/shippy24/SENG300GROUP2
+|\  
+| * c58eb8e : Rename TestIteration1.java to TestIteration2.java
+| *   1010695 : Merge branch 'master' of https://github.com/shippy24/SENG300GROUP2
+| |\  
+| | * d03c050 : Add files via upload
+| | * 3cf198b : Update Iteration1.java
+| | * 6073fe7 : Revert "added more visit methods to jins class"
+| | *   04691f4 : Merge branch 'master' of https://github.com/shippy24/SENG300GROUP2
+| | |\  
+| | * | b53eef9 : added more visit methods to jins class
+| * | | 32f7a29 : added few more tests
+* | | | c942dfd : tested Shay's .jar file, fixed class names
+| |_|/  
+|/| |   
+* | |   04a5db9 : Merge branch 'master' of https://github.com/shippy24/SENG300GROUP2
+|\ \ \  
+| | |/  
+| |/|   
+| * | b2ece7e : Create Iteration1.java
+| |/  
+| * 5115db8 : InProgress
+| * 278e447 : Add files via upload
+* | b18fad3 : Have the unzip method returning a folder, however still encountering an error
+|/  
+* 3aadfab : latest changes
+* 903eaa5 : incorporated recursive directory search
+* 4dbc242 : updated iteration1
+* c89b851 : added more ASTVisitor methods, fixed Linkedlist: recongnizes that elements are already present in ll
+* badc2d6 : changed print2() in iteration1
+* bf6eeab : put comments in typeObjQueue.java to explain building linkedlist
+* 9aaf770 : Initial Commit, using Amy's project, creared a linkedlist with declaration and reference types, tracks number of each
+* 3773d4f : Initial commit
